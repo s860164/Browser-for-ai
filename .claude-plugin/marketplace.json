@@ -1,0 +1,20 @@
+{
+  "$schema": "https://anthropic.com/claude-code/marketplace.schema.json",
+  "name": "browser-for-ai",
+  "version": "1.0.0",
+  "description": "Playwright-powered browser automation for Claude Code with persistent Google login sessions",
+  "owner": {
+    "name": "s860164",
+    "url": "https://github.com/s860164"
+  },
+  "plugins": [
+    {
+      "name": "browser-for-ai",
+      "description": "Playwright-powered browser automation with persistent Chrome profile, visible browser, and fast screenshot/click/scroll/type operations",
+      "category": "productivity",
+      "version": "1.0.0",
+      "source": "./plugin",
+      "homepage": "https://github.com/s860164/Browser-for-ai"
+    }
+  ]
+}
