@@ -1,0 +1,8 @@
+{
+  "name": "browser-for-ai",
+  "version": "1.0.0",
+  "description": "Playwright-powered browser automation for Claude Code. Persistent Google login, visible browser, fast screenshot/click/scroll/type operations.",
+  "author": "browser-for-ai",
+  "homepage": "https://github.com/user/browser-for-ai",
+  "keywords": ["browser", "playwright", "automation", "google", "mcp"]
+}
