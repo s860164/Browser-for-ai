@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Browser-for-AI: Start Playwright MCP server with persistent browser profile
-# Uses --vision mode so the browser window is VISIBLE and Claude can see screenshots.
+# Uses vision cap so Claude can see screenshots and the browser window is VISIBLE.
 
 set -euo pipefail
 
@@ -27,10 +27,12 @@ fi
 # Ensure Playwright has the browser installed
 npx -y playwright install "$BROWSER" 2>/dev/null || true
 
-# --vision  = VISIBLE browser window + screenshot-based interaction
-# Without --vision, @playwright/mcp defaults to headless + accessibility snapshots
+# --caps vision  = screenshot-based interaction + VISIBLE browser window
+# --caps pdf     = save pages as PDF
+# Valid caps: vision, pdf, devtools (NOT --vision as standalone flag!)
+# Browser is HEADED by default (no --headless flag needed)
 exec npx -y @playwright/mcp@latest \
   --browser "$BROWSER" \
   --user-data-dir "$PROFILE_DIR" \
-  --vision \
-  --viewport-size 1280,720
+  --caps "vision,pdf" \
+  --viewport-size 1280x720
