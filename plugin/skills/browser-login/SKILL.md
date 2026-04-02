@@ -1,6 +1,6 @@
 ---
 name: browser-login
-description: Log into Google (or any site) in the user's VISIBLE Chrome browser. Uses the Playwright MCP Bridge extension to control the real Chrome window.
+description: Log into Google (or any site) in the user's VISIBLE Chrome browser. Connects via CDP to control the real Chrome window on the desktop.
 user-invocable: true
 argument: "[url]"
 allowed-tools:
@@ -9,47 +9,31 @@ allowed-tools:
 
 # Browser Login
 
-Help the user log into a website using their real, visible Chrome browser. The plugin uses **--extension mode** which connects to Chrome via the Playwright MCP Bridge extension.
+Help the user log into a website using their real, visible Chrome browser. The plugin launches Chrome with remote debugging and connects via CDP, so the browser window is always visible on the user's desktop.
 
-## Pre-requisites Check
-
-Before navigating, verify the extension is set up:
-
-1. **Tell the user** they need the Playwright MCP Bridge extension in Chrome:
-   > To use this browser plugin, you need the **Playwright MCP Bridge** extension installed in Chrome:
-   >
-   > 1. Open Chrome on your desktop
-   > 2. Go to the Chrome Web Store and search for **"Playwright MCP Bridge"**
-   >    or visit: `https://chromewebstore.google.com/detail/playwright-mcp-bridge/gjgkljfaondcbhkfbnjpmjehlbkbgooo`
-   > 3. Click **Add to Chrome**
-   > 4. After installing, you should see the Playwright icon in your extensions bar
-   >
-   > Once installed, let me know and I'll navigate to the login page!
-
-2. **Wait for user confirmation** that the extension is installed
-
-## Login Flow
+## Instructions
 
 1. **Navigate to the login page:**
    - If the user provided a URL argument, use `browser_navigate` to go there
    - Otherwise, navigate to `https://accounts.google.com`
 
-2. **Take a screenshot** using `browser_take_screenshot` to show the user what Chrome is displaying
+2. **Take a screenshot** using `browser_take_screenshot` to show the user the current state
 
 3. **Tell the user:**
-   > I've navigated your Chrome browser to the login page. You should see it in your Chrome window right now.
+   > I've navigated Chrome to the login page. A Chrome window should be visible on your desktop.
    >
-   > Please complete the login directly in Chrome. Once you're done, let me know!
+   > Please complete the login directly in that Chrome window. Once you're done, let me know!
 
 4. **Wait for the user to confirm** they've completed login
 
 5. **Take another screenshot** to verify the login state
 
-6. **Confirm to the user** that their login is active. Since we're using their real Chrome browser, the session persists naturally with Chrome's own profile.
+6. **Confirm to the user** that their login is active. The session is saved in `~/.browser-for-ai/chrome-profile/` and persists across restarts.
 
 ## Important Notes
 
-- This plugin uses **--extension mode**: it controls the user's actual Chrome browser, NOT a separate hidden instance
-- The Chrome window is ALWAYS visible because it's the user's real Chrome
+- This plugin launches a REAL Chrome window with remote debugging (port 9222)
+- The Chrome window uses a separate profile directory so it won't interfere with the user's normal Chrome
 - Do NOT try to type passwords or interact with login forms yourself — let the user do this for security
-- If browser tools fail, the Playwright MCP Bridge extension might not be installed or Chrome might not be open
+- If the tools fail to connect, Chrome may need to be restarted — tell the user to quit all Chrome windows and try again
+- To reset login state, delete `~/.browser-for-ai/chrome-profile/` directory
