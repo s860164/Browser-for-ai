@@ -1,6 +1,6 @@
 ---
 name: browser
-description: Perform any browser task — navigate, click, type, screenshot, scroll. Uses persistent Chrome with your saved login sessions.
+description: Perform any browser task — navigate, click, type, screenshot, scroll. Uses Playwright to control a real browser with persistent login sessions.
 user-invocable: true
 argument: "<task description or URL>"
 allowed-tools:
@@ -9,50 +9,51 @@ allowed-tools:
 
 # Browser Automation
 
-Perform browser tasks using the persistent Chrome browser. This browser retains all login sessions (Google, etc.) so you can access authenticated pages directly.
+You MUST use the `mcp__plugin_browser-for-ai_browser__*` tools (NOT computer-use, NOT Claude in Chrome).
 
 ## Instructions
 
 Given the user's task description or URL:
 
-1. **Plan** what browser actions are needed
-2. **Execute** the actions using the available Playwright MCP tools
-3. **Verify** each step with screenshots when the result matters
-4. **Report** back to the user with what was found or accomplished
+1. **Navigate** using `browser_navigate` to go to the target URL
+2. **Take a screenshot** using `browser_take_screenshot` to show the user what's on screen
+3. **Interact** using `browser_click`, `browser_type`, `browser_press_key`, etc.
+4. **Verify** with screenshots after important actions
+5. **Report** back to the user with what was found or accomplished
+
+## IMPORTANT: Tool Selection
+
+- ALWAYS use tools starting with `mcp__plugin_browser-for-ai_browser__`
+- NEVER fall back to computer-use or Claude in Chrome tools
+- If a browser tool fails, retry or report the error — do NOT switch to other tools
 
 ## Available Tools
 
-The Playwright MCP server provides these core tools:
-
 ### Navigation
 - `browser_navigate` — Go to a URL
-- `browser_go_back` / `browser_go_forward` — History navigation
-- `browser_wait` — Wait for network idle or specific timeout
+- `browser_navigate_back` — Go back
 
 ### Interaction
-- `browser_click` — Click an element (by text, CSS selector, or coordinates)
+- `browser_click` — Click an element by text or CSS selector
 - `browser_type` — Type text into a focused element
 - `browser_select_option` — Select from a dropdown
 - `browser_hover` — Hover over an element
 - `browser_press_key` — Press keyboard keys
+- `browser_fill_form` — Fill form fields
+- `browser_mouse_click_xy` — Click at specific x,y coordinates
 
 ### Observation
-- `browser_snapshot` — Get accessibility tree (best for finding elements)
-- `browser_take_screenshot` — Capture visible page as image
-- `browser_console_messages` — Read browser console output
+- `browser_take_screenshot` — Capture the page as an image (SHOW THIS TO THE USER)
+- `browser_snapshot` — Get accessibility tree (text-based, good for finding elements)
+- `browser_console_messages` — Read browser console
 - `browser_network_requests` — See network activity
 
 ### Tabs
-- `browser_tab_list` — List open tabs
-- `browser_tab_new` — Open a new tab
-- `browser_tab_select` — Switch to a tab
-- `browser_tab_close` — Close a tab
+- `browser_tabs` — List open tabs
 
 ## Best Practices
 
-1. **Start with `browser_snapshot`** to understand the page structure before clicking
-2. **Use text-based selectors** (`browser_click` with `text=` or visible text) — they're more robust than CSS selectors
-3. **Take screenshots after important actions** to verify the result
-4. **Use `browser_wait`** after navigation or actions that trigger page loads
-5. **Check `browser_console_messages`** if something seems broken
-6. **For forms:** snapshot → identify fields → type into each → verify → submit
+1. **Always take a screenshot** after navigating or performing important actions — this shows the user what's happening
+2. **Use `browser_snapshot`** to understand page structure before clicking
+3. **Use text-based selectors** for clicking — more robust than CSS selectors
+4. **Take screenshots frequently** so the user can follow along
