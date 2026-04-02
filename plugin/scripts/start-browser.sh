@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Browser-for-AI: Start Playwright MCP server with persistent browser profile
-# Supports both local (macOS/Linux with Chrome) and cloud environments (Chromium).
+# Uses --vision mode so the browser window is VISIBLE and Claude can see screenshots.
 
 set -euo pipefail
 
@@ -27,8 +27,10 @@ fi
 # Ensure Playwright has the browser installed
 npx -y playwright install "$BROWSER" 2>/dev/null || true
 
+# --vision  = VISIBLE browser window + screenshot-based interaction
+# Without --vision, @playwright/mcp defaults to headless + accessibility snapshots
 exec npx -y @playwright/mcp@latest \
   --browser "$BROWSER" \
   --user-data-dir "$PROFILE_DIR" \
-  --caps "core,tabs,pdf,history,wait,files,install" \
+  --vision \
   --viewport-size 1280,720
